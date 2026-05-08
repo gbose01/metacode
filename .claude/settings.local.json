@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(gh repo *)",
+      "Bash(gh api *)",
+      "WebSearch",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:github.com)",
+      "Bash(curl -s \"https://raw.githubusercontent.com/Kaggle/kaggle-benchmarks/ci/cookbook.md\")",
+      "PowerShell(Get-ChildItem \"c:\\\\Projects\\\\metacode\" -ErrorAction SilentlyContinue; if \\(-not \\(Test-Path \"c:\\\\Projects\\\\metacode\"\\)\\) { \"Directory does not exist\" })",
+      "Skill(update-config)",
+      "Skill(update-config:*)",
+      "PowerShell(New-Item -ItemType Directory -Force -Path \"c:\\\\Projects\\\\metacode\\\\data\")",
+      "PowerShell(New-Item -ItemType Directory -Force -Path \"c:\\\\Projects\\\\metacode\\\\tasks\")",
+      "PowerShell(New-Item -ItemType Directory -Force -Path \"c:\\\\Projects\\\\metacode\\\\notebook\")",
+      "PowerShell(\"Directories created\")"
+    ]
+  }
+}

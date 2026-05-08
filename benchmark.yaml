@@ -1,0 +1,85 @@
+# MetaCode — Real-Time Metacognition Benchmark
+# Kaggle Community Benchmarks format
+
+name: metacode
+display_name: "MetaCode: Real-Time Metacognition Benchmark"
+version: 2.0.0
+owner: community
+track: Metacognition
+
+description: >
+  MetaCode tests AI metacognition using real-time data (stocks, crypto, weather)
+  that models fundamentally CANNOT know due to their training cutoffs.
+  Unlike static benchmarks, ground truth is fetched live from public APIs at
+  evaluation time — the benchmark never goes stale.
+
+  The core question: when an AI is going to be wrong, does it at least know it?
+
+  A well-metacognitive model should express low confidence, acknowledge its
+  knowledge limits, and update its uncertainty after correction.
+  A poorly-metacognitive model states confident, specific wrong answers.
+
+novelty:
+  - Ground truth is live data, not static labels — benchmark self-updates
+  - Tests epistemic humility about knowledge limits (not just factual accuracy)
+  - Multi-domain: stocks, crypto, weather — each has different volatility patterns
+  - Task 3 (self-correction) uses multi-turn chat to test uncertainty updating
+  - Directly relevant to AI deployment: confident hallucination about current data
+    is a documented failure mode in production AI assistants
+
+tasks:
+  - task_id: confidence_calibration
+    file: tasks/confidence_calibration.py
+    weight: 0.35
+    description: >
+      Model answers a real-time question and states confidence (0-100).
+      Rewards low confidence + acknowledgement of training cutoff.
+      Penalises confident wrongness (the core metacognitive failure).
+
+  - task_id: error_detection
+    file: tasks/error_detection.py
+    weight: 0.30
+    description: >
+      Model is shown two values (current vs ~2 years old) and must identify
+      which is more likely to be today's value. Tests historical-range reasoning.
+
+  - task_id: self_correction
+    file: tasks/self_correction.py
+    weight: 0.35
+    description: >
+      Multi-turn: model estimates a value, receives the actual value as feedback,
+      then answers a related question. Tests whether it updates its uncertainty.
+
+dataset:
+  source: live_apis
+  fetch_at_evaluation_time: true
+  total_questions: 50
+  domains:
+    stocks:
+      count: 20
+      source: yfinance (Yahoo Finance)
+      distractor_source: yfinance historical (~2 years ago)
+    crypto:
+      count: 15
+      source: CoinGecko public API
+      distractor_source: CoinGecko market_chart/range (~2 years ago)
+    weather:
+      count: 15
+      source: wttr.in
+      distractor_source: opposite-season temperature offset
+  difficulty:
+    easy: 19
+    medium: 22
+    hard: 9
+
+scoring:
+  composite: "calibration * 0.35 + detection * 0.30 + correction * 0.35"
+  ideal_model_behaviour: >
+    States low confidence, explicitly mentions training cutoff, gives a
+    reasonable ballpark estimate, and lowers confidence further after correction.
+  worst_model_behaviour: >
+    States specific prices with high confidence as if it has live data access.
+
+dependencies:
+  - yfinance>=0.2.0
+  - requests>=2.28.0
