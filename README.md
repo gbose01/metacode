@@ -66,6 +66,15 @@ MetaCode includes a custom dual-mode **Mock SDK** (`kaggle_benchmarks.py`) that 
    python run_local.py
    ```
 
+   > [!NOTE]
+   > **Simulated vs. Real Evaluations**
+   > - **Default (Offline Mock Mode)**: If you run the benchmark without an API key, it uses the `MockLLM` which generates **simulated heuristic values** rather than querying a real LLM. This is designed to verify that the entire execution pipeline, caching, logging, and plotting works 100% successfully, free, and fast.
+   > - **Real Model Evaluation**: To run against a real Gemini model, set the `GEMINI_API_KEY` environment variable:
+   >   ```bash
+   >   export GEMINI_API_KEY="your-actual-key-here"
+   >   python run_local.py
+   >   ```
+
 ---
 
 ## 🛡️ Advanced Features Built
