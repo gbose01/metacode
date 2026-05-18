@@ -3,3 +3,5 @@ metacode_submission.zip
 terminals/
 __pycache__/
 *.pyc
+.cache/
+results/
